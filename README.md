@@ -22,14 +22,14 @@ $ zypper refresh && zypper install -y git
 3. Das Projekt auschecken (muss in `/srv/www/` liegen): 
 ```bash
 $ cd /srv/www/
-$ git clone https://github.com/informatik-mannheim/faculty-schnuffelecke.git
+$ git clone https://github.com/informatik-mannheim/lernecken.git
 ```
 4. Installation ausführen:
 ```bash
-$ cd /srv/www/faculty-schnuffelecke/
+$ cd /srv/www/lernecken/
 $ ./install.sh
 ```
-5. Secret settings anpassen: in `/srv/www/faculty-schnuffelecke/schnuffelecken/schnuffelecken/settings_secret.py` die entsprechenden Settings anpassen
+5. Secret settings anpassen: in `/srv/www/lernecken/schnuffelecken/schnuffelecken/settings_secret.py` die entsprechenden Settings anpassen
 
 6. Apache neu starten:
 ```bash
@@ -40,7 +40,7 @@ $ systemctl restart apache2
 Zum Updaten das Skript `update.sh` ausführen:
 
 ```bash
-$ cd /srv/www/faculty-schnuffelecke
+$ cd /srv/www/lernecken
 $ ./update.sh
 ```
 
