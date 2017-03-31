@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Schnuffelecken Buchungssystem</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'website/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}">
+	
+	{% block header %}
+	{% endblock header %}
+</head>
+
+<body>
+	    {% block content %}
+	    {% endblock content %}
+
+	    <div class="col-md-12 footer-bar">
+	    	<a class="impressum-link" href="https://www.hs-mannheim.de/impressum.html" target="_blank">Impressum</a>
+	    </div>
+</body>
+</html>

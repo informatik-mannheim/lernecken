@@ -1,0 +1,48 @@
+<div class="row {{anchor}}" id="{{anchor}}">
+
+	<!-- navigation -->
+
+	<div class="text-center">
+		{% if prev %}
+			<a href="#{{prev}}">
+				<span class="glyphicon glyphicon-chevron-left navigation-arrow"></span>
+			</a>
+		{% endif %}
+		&nbsp;<span class="h1">KW {{week.calendar_week}}</span>&nbsp;
+		
+		{% if next %}
+			<a href="#{{next}}">
+				<span class="glyphicon glyphicon-chevron-right navigation-arrow"></span>
+			</a>
+		{% endif %}
+	</div>
+
+	<!-- table -->
+
+	<div class="table-responsive unselectable">
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="text-align: center;"><span class="clock glyphicon glyphicon-time"></span></th>
+					{% for header in week.headers %}
+						<th style="text-align: center;">
+							<span class="{{header.2|yesno:'underline,'}}">
+								<span class="hidden-xs hidden-sm">{{ header.0 }}, </span>{{ header.1 }}
+							</span>
+						</th>
+					{% endfor %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for row in week.rows %}
+					<tr>
+						<td class="col-md-1"><span>{{row.time_start}}</span><span class="hidden-sm hidden-xs "> - {{row.time_end}}</span></td>
+						{% for block in row.blocks %}
+							<td class="{{block.label}} table-row col-md-2" data-bookable="{{block.bookable}}" data-available="{{block.available}}" data-timestamp="{{block.timestamp}}">{{block.text}}</td>
+						{% endfor %}
+					</tr>		
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,16 @@
+{% extends "website/base.html" %}
+{% load bookings_table %}
+{% load static %}
+
+{% block header %}
+	<meta http-equiv="refresh" content="30;"> <!-- in die settings -->
+{% endblock header %}
+
+{% block content %}
+
+<div class="col-md-12">
+	<h1 class="text-center">Buchungsübersicht Gebäude {{facility}}</h1>
+	{% bookings_table week 0 %}
+</div>
+
+{% endblock content %}

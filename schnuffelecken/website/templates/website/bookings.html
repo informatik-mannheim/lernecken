@@ -1,0 +1,176 @@
+{% extends "website/base.html" %}
+{% load bookings_table %}
+{% load static %}
+{% block content %}
+
+	<!-- Header -->
+
+	<div class="col-md-12 header">
+		<div class="hidden-xs" style="display: inline-block;">
+			<img src="https://www.hs-mannheim.de/Templates/Master/Resources/Public/Icons/logo_bildmarke.svg" alt="Hochschul Logo Bild" style="margin-top: 20px; ">
+		</div>
+		
+      	<div class="hidden-xs header-text">
+      		Buchungsübersicht
+      	</div>
+      	
+		<div class="user-img">
+			<span class="glyphicon glyphicon-user user-icon"></span>
+		</div>
+
+		<div class="user-info" style="display:inline-block;">
+			<span><strong>{{user.first_name}} {{user.last_name}} ({{user.username}})</strong></span>
+			<br />
+			<span>Buchungskontingent: &nbsp;{{quota}}</span>
+
+			<form>
+				<button class="btn-sm btn-danger" style="margin-top:10px;" formaction="/logout" type="submit">Logout</button>
+			</form>
+		</div>
+	</div>
+
+	<!-- Message Container -->
+
+	<div class="col-md-12 message-container">
+		<div class="row text-center">
+			{% if info %}
+				<div class="{{info.css}}"><strong>{{info.message}}</strong></div>
+			{% endif %}
+			{% if not info %}
+				<div style="margin-top:20px;"></div>
+			{% endif %}
+		</div>
+	</div>
+
+	<!-- Lernecken Switcher -->
+
+	<div class="col-md-12 lernecken-switch">
+		<div class="col-md-1 col-md-offset-4">
+			<a href="/buchungen/g/">
+				<div class="lernecke gebaeude-g {{ is_g | yesno:'lernecke-selected,,'}}"></div>
+			</a>
+			<div class="lernecke-name text-center {{ is_g | yesno:'lernecke-selected-text,,'}}">Gebäude G</div>
+		</div>
+		
+		<div class="col-md-1 col-md-offset-2">
+			<a href="/buchungen/h/">
+				<div class="lernecke gebaeude-h  {{ is_g | yesno:',lernecke-selected,'}}"></div>
+			</a>
+				<div class="lernecke-name text-center {{ is_g | yesno:',lernecke-selected-text,'}}">Gebäude H</div>
+		</div>
+	</div>
+ 
+	<!-- Tables -->
+
+	<div class="col-md-10 col-md-offset-1 table-container">
+		<form action="{{ request.get_full_path }}" method="post" id="submit-form">
+			<input type="hidden" id="hidden-field">
+			{% csrf_token %}
+		</form>
+
+		{% bookings_table bookings.0 1 %}
+		{% bookings_table bookings.1 2 %}
+		{% bookings_table bookings.2 3 %}
+		{% bookings_table bookings.3 4 %}
+	</div>
+
+	<!-- Javascript -->
+
+	<script type="text/javascript">	
+		// create module to book or cancel a booking
+		var server = (function() {
+			var submitting = false;
+
+			function submit(date, action) {
+				if(submitting) {
+					return;
+				}
+
+				submitting = true;
+				
+				var form = document.getElementById("submit-form")
+				var input = document.getElementById("hidden-field")
+				
+				input.setAttribute("name", action);
+				input.setAttribute("value", date);
+
+				// add hash to form action to get the display the same week after POST
+				form.setAttribute("action", form.getAttribute("action") + window.location.hash)
+				form.submit();
+			}
+
+			function book(date) {
+				return submit(date, "book")
+			}
+
+			function cancel(date) {
+				return submit(date, "cancel")
+			}
+
+			return {
+				"book": book,
+				"cancel": cancel
+			}
+
+		}());
+
+		// register event handlers to book / cancel for all td elements
+		(function() {
+				// prevent sending POST twice. This is more of a hack, the proper way would be implmenting the POST/REDIRECT/GET pattern.
+				function disable_f5() {
+					history.replaceState(null, document.title, location.href);
+				}
+
+				function select_on_click() {
+					switch(this.getAttribute("data-available")) {
+						case "available": server.book(this.getAttribute("data-timestamp"));
+						case "booked": return;
+						case "reserved": server.cancel(this.getAttribute("data-timestamp"));
+					}
+				}
+
+				function register_event_handlers() {
+					var tds = document.getElementsByTagName("td");
+
+					for(var i = 0; i < tds.length; i++) {
+						var td = tds[i];
+						
+						/* block in the past can not be booked */
+						if(td.getAttribute("data-bookable") === "False") {
+							continue;
+						}
+
+						td.addEventListener("click", select_on_click.bind(td));
+					}
+				}
+
+				document.addEventListener("DOMContentLoaded", register_event_handlers);
+				document.addEventListener("DOMContentLoaded", disable_f5);
+		}());
+
+		// enable arrow key navigation of weeks
+		(function() {
+	        var left = 37;
+	        var right = 39; 
+
+	        document.body.addEventListener("keydown", function(event) { 
+	            var week = parseInt(window.location.hash[6])
+
+	            if(event.which === left && week > 1) {
+	                window.location.hash = "#woche" + (week - 1);
+	            }
+	            else if(event.which === right && week < 4) {                
+	                window.location.hash = "#woche" + (week + 1);
+	            }
+	        }); 
+	      }());
+
+		{% if display_first_week %}
+			document.addEventListener("DOMContentLoaded", function() {
+				window.location.hash = '#woche1'
+			});
+		{% endif %}
+		
+	</script>
+
+{% endblock content %}
