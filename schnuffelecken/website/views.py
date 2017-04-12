@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, reverse, render_to_response
 from django.template import RequestContext
 from django.db import transaction, IntegrityError
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from website.viewmodels import *
 from website.models import BookingPeriod, Booking
 
@@ -30,7 +30,7 @@ def login(request):
         password = request.POST["password"]
 
         if not is_allowed(username):
-            return HttpResponseForbidden(render(request, 'website/login.html', context={'error': 'Für Mitarbeiter gesperrt'}))
+            return HttpResponseForbidden(render(request, 'website/login.html', context={'error': 'Aktuell nur für Studenten'}))
 
         user = authenticate(username=username, password=password)
 
@@ -115,10 +115,12 @@ def bookings(request, facility):
         'is_g': facility == "g",
     }
 
-    response = HttpResponse(render(request, 'website/bookings.html', context=context))
+    response = HttpResponse(
+        render(request, 'website/bookings.html', context=context))
     response.status_code = info.status_code
 
     return response
+
 
 def logout(request):
     auth_logout(request)

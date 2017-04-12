@@ -82,7 +82,7 @@ class LoginViewTests(TestCase):
             '/login/', {'username': self.username, 'password': self.password})
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.context['error'], 'Für Mitarbeiter gesperrt')
+        self.assertEqual(response.context['error'], 'Aktuell nur für Studenten')
 
     @override_settings(STAFF_ACCESS=False)
     def test_still_allowed_for_students(self):

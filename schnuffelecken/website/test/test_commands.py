@@ -54,8 +54,8 @@ class CommandsTests(TestCase):
         out = StringIO()
 
         call_command('remove_old_bookings', *args, **opts, stdout=out)
-        
+
         result = out.getvalue()
-        
+
         self.assertIn("Removed 3 bookings", result)
         self.assertEqual(len(Booking.objects.all()), 3)
