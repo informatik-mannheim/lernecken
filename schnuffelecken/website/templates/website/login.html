@@ -18,7 +18,7 @@
 
 <div id="login-container">
   <div class="col-md-12 header">
-      <img class="hidden-xs" src="https://www.hs-mannheim.de/Templates/Master/Resources/Public/Icons/logo_bildmarke.svg" alt="Hochschul Logo Bild" style="margin-top: 20px">
+      <img class="hidden-xs space-20" src="https://www.hs-mannheim.de/Templates/Master/Resources/Public/Icons/logo_bildmarke.svg" alt="Hochschul Logo Bild">
     
         <div class="hidden-xs header-text">
           Lernecken
@@ -36,10 +36,10 @@
               {% csrf_token %}
              <div class="row">
                 <div class="col-md-1">
-                  <img src="{% static 'website/icon-eckig-g.png' %}" alt="logo" style="width:50px">
+                  <img class="login-logo" src="{% static 'website/icon-eckig-g.png' %}" alt="logo">
                 </div>
                 
-                <div class="col-md-3 col-md-offset-1" style="font-size: 36px; font-weight: 600; margin-bottom: 20px;">Anmeldung</div>
+                <div class="col-md-3 col-md-offset-1 login-headline">Anmeldung</div>
 
               </div>
               <!-- error message if authentication failed -->

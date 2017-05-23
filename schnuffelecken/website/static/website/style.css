@@ -17,6 +17,10 @@ body {
   outline: none;
 }
 
+.space-20 {
+  margin-top: 20px;
+}
+
 /*
   =========
   Impressum
@@ -125,6 +129,16 @@ form[role=login] button {
 
 form[role=login] > div {
   text-align: center;
+}
+
+.login-headline {
+  font-size: 36px; 
+  font-weight: 600; 
+  margin-bottom: 20px;
+}
+
+.login-logo {
+  width: 50px;
 }
 
 #logout-success:not(:target) {display:none;}
