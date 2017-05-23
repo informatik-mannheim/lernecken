@@ -1,16 +1,15 @@
-from django.db import models, transaction
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models, transaction
 
 from datetime import datetime, timedelta
+
 from website.viewmodels import *
 
 
 class Statistic(models.Model):
-    """
-    Simple accumulation of bookings. To be extended if necessary.
+    """Simple accumulation of bookings.
+    To be extended if more complex statistics are needed.
     """
     calendar_week = models.PositiveSmallIntegerField()
     year = models.PositiveSmallIntegerField()
@@ -45,20 +44,24 @@ class Statistic(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Override default save method to ALWAYS perform a clean() 
+        Override default save method to ALWAYS perform a clean()
         to ensure all validation criteria are satisfied.
         """
         self.clean()
         return super(Statistic, self).save(*args, **kwargs)
 
     def __str__(self):
-        return "[{0}][facility:{1}] KW {2}: {3} bookings".format(self.year, self.facility, self.calendar_week, self.bookings)
+        return "[{0}][facility:{1}] KW {2}: {3} bookings".format(
+            self.year,
+            self.facility,
+            self.calendar_week,
+            self.bookings)
 
 
 class Booking(models.Model):
     """
-    Models a booking. Right now, a booking is very simple - it stores 
-    the user and facility as just plain strings. The date needs to be 
+    Models a booking. Right now, a booking is very simple - it stores
+    the user and facility as just plain strings. The date needs to be
     the exact time the booking starts (e.g. 2017-02-01T09:00:00).
     """
     user = models.CharField(max_length=20)
@@ -72,8 +75,8 @@ class Booking(models.Model):
         return user and self.user == user.username
 
     def calendar_week(self):
-        """
-        Return calendar week. Note that for example 2017-1-1 is calendar week 52 / 2016!
+        """Return calendar week.
+        Note that for example 2017-1-1 is calendar week 52 / 2016!
         But that doesn't matter too much as we only deal with workdays.
         """
         return self.date.isocalendar()[1]
@@ -87,8 +90,8 @@ class Booking(models.Model):
 
     @staticmethod
     def get_user_quota(username, date=None):
-        """
-        Check user quota (number of available bookings from start of current BookingPeriod on).
+        """Check user quota (number of available bookings
+        from start of current BookingPeriod on).
         """
         date = date or datetime.now()
 
@@ -100,8 +103,7 @@ class Booking(models.Model):
 
     @staticmethod
     def remove_old():
-        """
-        Remove all entries older than settings.OLD_BOOKINGS_EXPIRATION_IN_DAYS days
+        """Remove all entries older than settings.OLD_BOOKINGS_EXPIRATION_IN_DAYS days
         """
         threshold = datetime.now() - timedelta(settings.OLD_BOOKINGS_EXPIRATION_IN_DAYS + 1)
         bookings = Booking.objects.filter(date__lte=threshold)
@@ -116,7 +118,7 @@ class Booking(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Override default save method to ALWAYS perform a clean() 
+        Override default save method to ALWAYS perform a clean()
         to ensure all validation criteria are satisfied.
         """
         self.clean()
@@ -140,10 +142,10 @@ class Booking(models.Model):
 
 
 class BookingPeriod(object):
-    """
-    Represents one bookable period of four weeks. 
-    Given a date, it will find the corresponding monday (either the last monday 
-    if it is a workday or the next monday if it is a weekend day).
+    """Represents one bookable period of four weeks.
+    Given a date, it will find the corresponding monday
+    (either the last monday if it is a workday or
+    the next monday if it is a weekend day).
     """
 
     def __init__(self, date=None):
@@ -182,8 +184,8 @@ class Week(object):
 
 
 class Day(object):
-    """
-    Represents one day and the corresponding bookings as either booked, reserved or available.
+    """Represents one day and the corresponding bookings
+    as either booked, reserved or available.
     """
 
     def __init__(self, date):
@@ -192,8 +194,9 @@ class Day(object):
 
     def get_bookings(self, facility, user):
         """
-        To reduce database queries, it will lazily fetch the bookings on first call and cache them.
-        If for future usage it should also reflect the latest DB state, this needs to be changed
+        To reduce database queries, it will lazily fetch the bookings on
+        first call and cache them. If for future usage it should also reflect
+        the latest DB state, this needs to be changed
         (probably needs some refactoring then).
         """
         if not self.bookings:

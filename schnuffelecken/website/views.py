@@ -15,6 +15,7 @@ from website.models import BookingPeriod, Booking
 
 
 def index(request):
+    """Redirect to proper page if base URL is requested."""
     if request.user.is_authenticated:
         return redirect(reverse('bookings', kwargs={'facility': 'g'}))
     else:
@@ -22,6 +23,7 @@ def index(request):
 
 
 def login(request):
+    """View for login page."""
     if request.user.is_authenticated:
         return redirect(reverse('bookings', kwargs={'facility': 'g'}))
 
@@ -45,8 +47,9 @@ def login(request):
 
 def is_allowed(username):
     """
-    Until some legal concerns are clarified, staff should not be able to use the system.
-    If the username starts with a digit, the user is a student.
+    Until some legal concerns are clarified, staff should not be able to
+    log in. If the username starts with a digit, the user
+    is identified as student.
     """
     is_student = username[0].isdigit()
 
@@ -54,6 +57,7 @@ def is_allowed(username):
 
 
 def handle_booking(request, facility):
+    """Handle a booking request"""
     date = datetime.fromtimestamp(float(request.POST["book"]))
     booking = Booking(date=date, user=request.user.username, facility=facility)
 
@@ -77,6 +81,7 @@ def handle_booking(request, facility):
 
 
 def handle_cancellation(request, facility):
+    """Handle a cancellation request"""
     date = datetime.fromtimestamp(float(request.POST["cancel"]))
     username = request.user.username
     booking = Booking.objects.filter(
@@ -93,6 +98,8 @@ def handle_cancellation(request, facility):
 
 @login_required(login_url='/login/')
 def bookings(request, facility):
+    """View for display of bookings as well as booking and cancel actions.
+    """
     info = AllOk()
 
     if request.POST and "cancel" in request.POST:
@@ -123,18 +130,23 @@ def bookings(request, facility):
 
 
 def logout(request):
+    """View for logout requests.
+    This just redirects and renders nothing itself.
+    """
     auth_logout(request)
     return redirect(reverse('login') + '#logout-success')
 
 
 def handler404(request):
-    repsonse = render_to_response(
+    """View for customized 404 website"""
+    response = render_to_response(
         'website/404.html', {}, context_instance=RequestContext(request))
     response.status_code = 404
     return response
 
 
 def status(request, facility):
+    """View for status website"""
     week = WeekViewModel(BookingPeriod(datetime.now()).weeks[
                          0], facility, request.user)
     context = {"week": week, "facility": facility.upper()}

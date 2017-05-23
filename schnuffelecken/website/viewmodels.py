@@ -2,8 +2,8 @@ from datetime import datetime
 
 
 class WeekViewModel(object):
-    """
-    Transform week into a row layout that allows for easy table row creation looping
+    """Transform week into a row layout that allows
+    for easy table row creation looping.
     """
 
     def __init__(self, week, facility, user):
