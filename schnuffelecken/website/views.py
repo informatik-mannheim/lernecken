@@ -10,8 +10,10 @@ from django.template import RequestContext
 from django.db import transaction, IntegrityError
 
 from datetime import datetime
+
 from website.viewmodels import *
 from website.models import BookingPeriod, Booking
+from schnuffelecken.settings import STATUS_PAGE_REFRESH_RATE_IN_SECONDS
 
 
 def index(request):
@@ -149,6 +151,10 @@ def status(request, facility):
     """View for status website"""
     week = WeekViewModel(BookingPeriod(datetime.now()).weeks[
                          0], facility, request.user)
-    context = {"week": week, "facility": facility.upper()}
+
+    context = {
+        "week": week,
+        "facility": facility.upper(),
+        "refresh_rate": STATUS_PAGE_REFRESH_RATE_IN_SECONDS}
 
     return HttpResponse(render(request, 'website/status.html', context))

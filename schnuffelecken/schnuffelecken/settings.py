@@ -103,5 +103,8 @@ DEBUG = False
 # every 24 hours, bookings older than this value will be removed
 OLD_BOOKINGS_EXPIRATION_IN_DAYS = 30
 
+# how often the status page should be refreshed when displayed, in seconds
+STATUS_PAGE_REFRESH_RATE_IN_SECONDS = 30
+
 # put this in the end so it allows for local overrides in settings_secret.py
 from .settings_secret import *
