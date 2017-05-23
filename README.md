@@ -1,6 +1,6 @@
-# Schnuffelecke
+# Lernecken
 
-Buchungssystem für die Schnuffelecken (studentische Arbeitsecken) des CIT.
+Buchungssystem für die Lernecken (studentische Arbeitsecken) des CIT.
 
 ## Voraussetzungen
 - OS: [SUSE Linux Enterprise Server 12 SP2](https://www.suse.com/releasenotes/x86_64/SUSE-SLES/12-SP2/)
