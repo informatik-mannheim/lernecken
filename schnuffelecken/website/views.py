@@ -13,7 +13,7 @@ from datetime import datetime
 
 from website.viewmodels import *
 from website.models import BookingPeriod, Booking
-from schnuffelecken.settings import STATUS_PAGE_REFRESH_RATE_IN_SECONDS
+from schnuffelecken.settings import STATUS_PAGE_REFRESH_RATE_IN_SECONDS, URL
 
 
 def index(request):
@@ -155,6 +155,7 @@ def status(request, facility):
     context = {
         "week": week,
         "facility": facility.upper(),
-        "refresh_rate": STATUS_PAGE_REFRESH_RATE_IN_SECONDS}
+        "refresh_rate": STATUS_PAGE_REFRESH_RATE_IN_SECONDS,
+        "url": URL}
 
     return HttpResponse(render(request, 'website/status.html', context))
